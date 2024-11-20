@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Online</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold">Tech Store</h1>
+      <button class="relative">
+        <!-- Cart Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13l-1 5h12m-8 0a2 2 0 104 0m-4 0H5" />
+        </svg>
+        <!-- Cart Item Count -->
+        <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full px-2">2</span>
+      </button>
+    </div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="bg-cover bg-center bg-gray-100 mg h-64 mt-10 flex items-center justify-center text-white"
+    style="background-image: url('https://i.univbkstr.com/v3/img/pages/tech/tech-front-2.jpg');">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold">Bienvenido a Tech Store</h2>
+      <p class="mt-2">Tu tienda de tecnología al mejor precio</p>
+    </div>
+  </section>
+
+  <!-- Toggle View Buttons -->
+  <div class="flex justify-center mt-4 items-center bg-gray-100">
+    <button id="toggle-grid" class="px-4 py-2 bg-blue-500 text-white rounded mr-2 flex justify-center">Vista de Grid</button>
+    <button id="toggle-flex" class="px-4 py-2 bg-blue-500 text-white rounded flex justify-center">Vista de Flex</button>
+  </div>
+  <!--popover-->
+  <div id="popover" class="absolute hidden mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+    <ul>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="PCs">PCs</button></li>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="Smartwatches">Smartwatches</button></li>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="Drones">Drones</button></li>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="Cameras">Cameras</button></li>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="Games">Games</button></li>
+      <li><button class="block px-4 py-2 text-sm hover:bg-gray-100" data-category="TVs">TVs</button></li>
+    </ul>
+  </div>
+</div>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Product Catalog -->
+    <div id="product-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+  </main>
+
+  <template id="product-card-template">
+    <!-- Product Card Template -->
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg flex flex-col">
+      <img src="" alt="" class="rounded-t-lg">
+      <div class="mt-4 flex-1">
+        <h3 class="font-bold text-lg"></h3>
+        <p class="text-sm text-gray-500"></p>
+        <div class="flex items-center mt-2">
+          <span class="text-yellow-500">★</span>
+          <span class="ml-1"></span>
+        </div>
+        <p class="text-blue-600 font-bold mt-4"></p>
+      </div>
+      <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded">Agregar al carrito</button>
+    </div>
+  </template>
+
+  <script>
+    // Fetch products from API
+    fetch('https://products-foniuhqsba-uc.a.run.app/')
+      .then(response => response.json())
+      .then(data => {
+        // Assuming data is an array of products
+        const container = document.getElementById("product-container");
+        const template = document.getElementById("product-card-template");
+
+        // Loop through the products and populate the page
+        data.forEach((product) => {
+          const clone = template.content.cloneNode(true);
+          clone.querySelector("img").src = product.image || 'https://via.placeholder.com/150';
+          clone.querySelector("h3").textContent = product.name || 'Nombre del Producto';
+          clone.querySelector("p.text-sm").textContent = `Lanzado: ${product.release_date || 'N/A'}`;
+          clone.querySelector(".text-yellow-500 + span").textContent = product.rating || 'N/A';
+          clone.querySelector("p.text-blue-600").textContent = `$${product.price || '0.00'}`;
+          container.appendChild(clone);
+        });
+      })
+      .catch(error => console.error('Error fetching products:', error));
+
+    // Toggle View Buttons
+    document.getElementById("toggle-grid").addEventListener("click", () => {
+      const container = document.getElementById("product-container");
+      container.className = "grid grid-cols-1 md:grid-cols-3 gap-4";
+    });
+    document.getElementById("toggle-flex").addEventListener("click", () => {
+      const container = document.getElementById("product-container");
+      container.className = "flex flex-wrap gap-4";
+    });
+  </script>
+
+</body>
+</html>
